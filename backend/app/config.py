@@ -15,6 +15,7 @@ class Settings:
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
     API_KEY: str = os.getenv("API_KEY")
     ADMIN_KEY: str = os.getenv("ADMIN_KEY")
+    ALLOWED_ORIGINS: str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003")
     
     # Allowed audio file extensions for transcription
     ALLOWED_AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".webm"}

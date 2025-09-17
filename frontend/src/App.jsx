@@ -19,41 +19,39 @@ function App() {
   useEffect(() => {
     // Check for stored authentication
     const checkAuth = async () => {
-      const token = getStoredToken();
-      if (token) {
+      const apiKey = import.meta.env.VITE_DEFAULT_API_KEY || 'fast_API_KEY';
+      if (apiKey) {
         try {
-          // Validate token with backend
+          // Validate API key with backend
           const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
             headers: {
-              'Authorization': `Bearer ${token}`
+              'X-API-Key': apiKey
             }
           });
           
           if (response.ok) {
             const userData = await response.json();
-            setUser(userData);
+            setUser({ username: 'User', ...userData });
             setIsAuthenticated(true);
             addNotification({
               type: 'success',
               title: 'Welcome back!',
-              message: `Logged in as ${userData.username}`,
+              message: `Connected successfully`,
               duration: 3000,
               autoDismiss: true
             });
           } else {
-            // Token is invalid
-            removeStoredToken();
+            // API key is invalid
             addNotification({
               type: 'warning',
-              title: 'Session expired',
-              message: 'Please log in again',
+              title: 'API Key Invalid',
+              message: 'Please check your API configuration',
               duration: 5000,
               autoDismiss: true
             });
           }
         } catch (error) {
           console.error('Auth check failed:', error);
-          removeStoredToken();
           addNotification({
             type: 'error',
             title: 'Connection error',
@@ -182,7 +180,7 @@ function App() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <SimpleMultiLanguageDashboard user={user || {username: 'Guest'}} onLogout={handleLogout} />
+                  <SimpleMultiLanguageDashboard user={user || {username: 'Guest'}} />
                 </motion.div>
               }
             />

@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import base, chat, transcribe, ws_stream_simple as ws_stream, voice_profiles, analytics, dashboard, phase5b, multi_lang_simple
 from app.db import create_tables
+from app.config import settings
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -15,10 +16,21 @@ app = FastAPI(
     version="5.1.0"
 )
 
-# Add CORS middleware
+# Add CORS middleware - now using environment variable
+allowed_origins = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else [
+    "http://localhost:3000", 
+    "http://127.0.0.1:3000", 
+    "http://localhost:3001", 
+    "http://127.0.0.1:3001",
+    "http://localhost:3002", 
+    "http://127.0.0.1:3002",
+    "http://localhost:3003", 
+    "http://127.0.0.1:3003"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3001", "http://127.0.0.1:3001"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
